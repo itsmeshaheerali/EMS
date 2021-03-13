@@ -1,0 +1,58 @@
+﻿@{
+    ViewBag.Title = "ListRecords";
+}
+
+<h2>Employees</h2>
+
+<p>
+    @Html.ActionLink("Create New", "Create")
+</p>
+
+<table class="table">
+    <tr>
+        <th>Auto ID</th>
+        <th>
+            Name
+        </th>
+        <th>
+            Department
+        </th>
+        <th>
+            Gender
+        </th>
+        <th>Delete </th>
+    </tr>
+    <tbody id="tableRows"></tbody>
+</table>
+<script src="~/Scripts/jquery-3.4.1.min.js"></script>
+<script type="text/javascript">
+    $(function () {
+        LoadAll();
+    });
+    function LoadAll() {
+        $.ajax(
+            {
+                url: '/Employee/List',
+                type: 'GET',
+                dataType: 'json',
+                contentType: 'application/json; charset=utf-8',
+                success: function (data, status, xhr) {
+                    processDataMethod(data);
+                },
+                error: function (xhr, status, error) {
+                    alert(error);
+                }
+            });
+    }
+
+    function processDataMethod(data) {
+        var output = $("#tableRows");
+        output.empty();
+        for (var i = 0; i < data.length; i++) {
+            var person = data[i];
+            output.append("<tr><td><a href='javascript:ShowDetails(" + person.EmployeeId
+                + ")'>" + person.EmployeeId + "</a></td><td>" + person.Name + "</td><td>" +
+                person.Department + "</td><td>" + person.Gender + "</td><td><a style='color:red;' href='javascript:DeleteRecord(" + person.EmployeeId +")' title='Delete details'>Delete</a></td></tr>");
+        }
+    }
+</script>
